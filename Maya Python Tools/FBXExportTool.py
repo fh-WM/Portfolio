@@ -10,12 +10,13 @@ class FBXExportTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def __init__(self):
         super(FBXExportTool, self).__init__()
         self.toolUI()
+        self.initialize_settings()
 
 
     def toolUI(self):
         self.setGeometry(500, 300, 450, 350)
         self.setWindowTitle("FBX Export Tool")
-        self.statusBar().showMessage("Last Updated: 2024.09.22   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2024.12.24   |   For: Maya 2024   |   Fuma Hara")
 
         label_message = QtWidgets.QLabel("※まず始めに書き出したいオブジェクトをビューもしくはアウトライナから選択してください") #(label全て)各ラベル
         label_fileName = QtWidgets.QLabel("ファイル名")
@@ -25,10 +26,9 @@ class FBXExportTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         self.cmbBox_fileName.addItems(["入力する", "そのまま"])
         self.cmbBox_fileName.currentIndexChanged.connect(self.change_fileNameComboBox) #項目が変更された際の処理
 
-        self.txtLine_fileName = QtWidgets.QLineEdit() #(txtLine全て)各入力欄
-        self.txtLine_filePath = QtWidgets.QLineEdit()
-        self.txtLine_folderName = QtWidgets.QLineEdit(readOnly = True)
-        self.txtLine_folderName.setText("←をチェックした場合のみ入力が可能です")
+        self.txtLine_fileName = QtWidgets.QLineEdit(placeholderText = "ファイル名を入力") #(txtLine全て)各入力欄
+        self.txtLine_filePath = QtWidgets.QLineEdit(placeholderText = "書き出し先(ファイルパス)を入力")
+        self.txtLine_folderName = QtWidgets.QLineEdit(readOnly = True, placeholderText = "新規フォルダ名を入力", text = "←をチェックした場合のみ入力が可能です")
 
         self.chkBox_folderName = QtWidgets.QCheckBox("新規フォルダを作成 | 新規フォルダ名") #新規フォルダ作成有無用チェックボックス
         self.chkBox_folderName.stateChanged.connect(self.change_folderNameCheckBox)
@@ -74,6 +74,8 @@ class FBXExportTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         lyt_widget.setLayout(lyt_vBox_main)
         self.setCentralWidget(lyt_widget) #CentralWidgetに配置
 
+
+    def initialize_settings(self):
         self.name_os = platform.system() #使用中のOS
 
 
@@ -81,15 +83,15 @@ class FBXExportTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         txt_fileName = self.txtLine_fileName.text() #ファイル名
         txt_filePath = self.txtLine_filePath.text() #書き出し先(ファイルパス)
         txt_folderName = self.txtLine_folderName.text() #フォルダ名
-        filePath_folderName = txt_filePath + "/" + txt_folderName + "/" #新規フォルダを含む書き出し先(ファイルパス)
+        filePath_folderName = f"{txt_filePath}/{txt_folderName}/" #新規フォルダを含む書き出し先(ファイルパス)
         selected_objects = cmds.ls(sl = True) #選択中のオブジェクト
         name_joined = ('_'.join(selected_objects)) #選択中のオブジェクトをアンダーバーで全て繋げたもの(obj01_obj02_obj03となる)
 
         if self.cmbBox_fileName.currentText() == "そのまま":
             txt_fileName = name_joined
 
-        export_fbx01 = txt_filePath + "/" + txt_fileName + ".fbx" #新規フォルダを作成しない
-        export_fbx02 = filePath_folderName + "/" + txt_fileName + ".fbx" #新規フォルダを作成
+        export_fbx01 = f"{txt_filePath}/{txt_fileName}.fbx" #新規フォルダを作成しない
+        export_fbx02 = f"{filePath_folderName}/{txt_fileName}.fbx" #新規フォルダを作成
 
         if self.chkBox_folderName.isChecked():
             if os.path.isdir(filePath_folderName) == True:
