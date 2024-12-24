@@ -16,7 +16,7 @@ class PlacementTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def toolUI(self):
         self.setGeometry(500, 300, 400, 500)
         self.setWindowTitle("Placement Tool")
-        self.statusBar().showMessage("Last Updated: 2024.10.31   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2024.12.24   |   For: Maya 2024   |   Fuma Hara")
 
         label_referenceName = QtWidgets.QLabel("配置基準")
         label_percentage = QtWidgets.QLabel("配置割合")
@@ -125,10 +125,10 @@ class PlacementTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         selected_object = cmds.ls(sl = True)
         self.initialize_settings()
 
-        if len(selected_object) == 0:
+        if not selected_object:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "何も選択されていません、登録に失敗しました。", t = "ERROR: Placement Tool")
 
-        elif len(selected_object) > 1:
+        elif len(selected_object) != 1:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "複数登録することはできません、登録に失敗しました。", t = "ERROR: Placement Tool")
 
         elif cmds.objectType(cmds.listRelatives(selected_object[0], f = True, s = True)) == 'mesh':
@@ -208,7 +208,7 @@ class PlacementTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         for one_name in range(self.listArea_componentNames.count()):
             now_componentNames.append(self.listArea_componentNames.item(one_name).text()) #現在のコンポーネント名リストの中身を取得し変換
 
-        if len(selected_objects) == 0:
+        if not selected_objects:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "何も選択されていません、配置に失敗しました。", t = "ERROR: Placement Tool")
         else:
             if len(selected_objects) <= self.listArea_componentNames.count():
