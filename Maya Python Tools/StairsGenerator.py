@@ -84,7 +84,7 @@ class StairsGenerator():
         cmds.setParent(u = True) #"注意事項"を親に指定
 
         cmds.frameLayout(l = "インフォメーション")
-        cmds.text(l = "Last Updated: 2024.09.15", al = 'left')
+        cmds.text(l = "Last Updated: 2024.12.24", al = 'left')
         cmds.text(l = "For: Maya 2024", al = 'left')
         cmds.text(l = "Fuma Hara", al = 'left')
         cmds.setParent(u = True) #"インフォメーション"を親に指定
@@ -127,7 +127,7 @@ class StairsGenerator():
                 cmds.confirmDialog(b = "OK", icn = 'critical', m = "現在指定している値では階段を生成できません", t = "ERROR: Stairs Generator")
                 cmds.error("生成が中止されました")
 
-        if st_genType_stairs == '長さ & 高さ' and st_genType_step == 2: #階段の長さ, 階段の高さ, 1段あたりの奥行
+        elif st_genType_stairs == '長さ & 高さ' and st_genType_step == 2: #階段の長さ, 階段の高さ, 1段あたりの奥行
             st_num_steps = st_length_stairs / st_depth_step
             
             if st_num_steps == round(st_num_steps):
@@ -136,35 +136,35 @@ class StairsGenerator():
                 cmds.confirmDialog(b = "OK", icn = 'critical', m = "現在指定している値では階段を生成できません", t = "ERROR: Stairs Generator")
                 cmds.error("生成が中止されました")
 
-        if st_genType_stairs == '長さ & 高さ' and st_genType_step == 3: #階段の長さ, 階段の高さ, 段数
+        elif st_genType_stairs == '長さ & 高さ' and st_genType_step == 3: #階段の長さ, 階段の高さ, 段数
             st_height_step = round(st_height_stairs / st_num_steps, 3)
             st_depth_step = round(st_length_stairs / st_num_steps, 3)
 
-        if st_genType_stairs == '長さ & 角度' and st_genType_step == 1: #階段の長さ, 階段の角度, 1段あたりの高さ
+        elif st_genType_stairs == '長さ & 角度' and st_genType_step == 1: #階段の長さ, 階段の角度, 1段あたりの高さ
             st_depth_step = round(st_height_step / tan_angle_stairs, 3)
             st_num_steps = round(st_length_stairs / st_depth_step)
 
-        if st_genType_stairs == '長さ & 角度' and st_genType_step == 2: #階段の長さ, 階段の角度, 1段あたりの奥行
+        elif st_genType_stairs == '長さ & 角度' and st_genType_step == 2: #階段の長さ, 階段の角度, 1段あたりの奥行
             st_num_steps = round(st_length_stairs / st_depth_step)
             st_height_step = round(st_depth_step * tan_angle_stairs, 3)
 
-        if st_genType_stairs == '長さ & 角度' and st_genType_step == 3: #階段の長さ, 階段の角度, 段数
+        elif st_genType_stairs == '長さ & 角度' and st_genType_step == 3: #階段の長さ, 階段の角度, 段数
             st_depth_step = round(st_length_stairs / st_num_steps, 3)
             st_height_step = round(st_depth_step * tan_angle_stairs, 3)
 
-        if st_genType_stairs == '高さ & 角度' and st_genType_step == 1: #階段の高さ, 階段の角度, 1段あたりの高さ
+        elif st_genType_stairs == '高さ & 角度' and st_genType_step == 1: #階段の高さ, 階段の角度, 1段あたりの高さ
             st_num_steps = round(st_height_stairs / st_height_step)
             st_depth_step = round(st_height_step / tan_angle_stairs, 3)
 
-        if st_genType_stairs == '高さ & 角度' and st_genType_step == 2: #階段の高さ, 階段の角度, 1段あたりの奥行
+        elif st_genType_stairs == '高さ & 角度' and st_genType_step == 2: #階段の高さ, 階段の角度, 1段あたりの奥行
             st_height_step = round(st_depth_step * tan_angle_stairs, 3)
             st_num_steps = round(st_height_stairs / st_height_step)
 
-        if st_genType_stairs == '高さ & 角度' and st_genType_step == 3: #階段の高さ, 階段の角度, 段数
+        elif st_genType_stairs == '高さ & 角度' and st_genType_step == 3: #階段の高さ, 階段の角度, 段数
             st_height_step = round(st_height_stairs / st_num_steps, 3)
             st_depth_step = round(st_height_step / tan_angle_stairs, 3)
 
-        if st_genType_stairs == '1段あたりの高さ & 1段あたりの奥行 & 段数':
+        elif st_genType_stairs == '1段あたりの高さ & 1段あたりの奥行 & 段数':
             pass #指定された値をそのまま使用し計算不要なため
 
         st_now_locationX = st_depth_step #現在の配置座標X、配置の度に変化する
@@ -283,21 +283,21 @@ class StairsGenerator():
         sp_merge_vertex = cmds.checkBox('setSp_merge_vertex', q = True, v = True) #踏板同士の重なった頂点をマージ
 
         sp_radius_pPipe = sp_width_tread + sp_radius_hole #polyPipeの半径
-        sp_height_tread = sp_height_tread * 2 #polyPipeのheightは何故か指定した値/2になってしまうため、おそらく仕様に問題あり
+        sp_height_tread = sp_height_tread * 2 #polyPipeのheightは何故か指定した値/2になってしまうため、Maya2024現在、理由は不明
         sp_height_stairs_1R = sp_height_stairs / sp_num_rounds #1周あたりの高さ
         
         if sp_genType_stairs == '高さ' and sp_genType_step == 1: #階段の高さ & 1段あたりの高さ
             sp_num_steps = round(sp_height_stairs_1R / sp_height_step)
         
-        if sp_genType_stairs == '高さ' and sp_genType_step == 2: #階段の高さ & 1周あたりの段数
+        elif sp_genType_stairs == '高さ' and sp_genType_step == 2: #階段の高さ & 1周あたりの段数
             sp_height_step = round(sp_height_stairs_1R / sp_num_steps, 3)
         
-        if sp_genType_stairs == '角度' and sp_genType_step == 2: #階段の角度 & 1周あたりの段数
+        elif sp_genType_stairs == '角度' and sp_genType_step == 2: #階段の角度 & 1周あたりの段数
             sp_stpDph = round(math.sin(math.pi / sp_num_steps) * 2 * sp_radius_pPipe, 3) #1段あたりの奥行
             sp_height_step = round(math.tan(math.radians(sp_angle_stairs)) * sp_stpDph, 3)
             sp_height_stairs = sp_height_step * sp_num_steps * sp_num_rounds
         
-        if sp_genType_stairs == '1段あたりの高さ & 1周あたりの段数':
+        elif sp_genType_stairs == '1段あたりの高さ & 1周あたりの段数':
             sp_height_stairs = sp_height_step * sp_num_steps * sp_num_rounds
 
         sp_placeAngle_tread = round(360 / sp_num_steps, 3) #踏板の配置角度
@@ -312,10 +312,9 @@ class StairsGenerator():
             sp_height_tread = sp_height_step * 2 #踏板の高さを1段あたりの高さで上書き
 
         cmds.polyPipe(n = "SpiralStairsTread_BaseShape", h = sp_height_tread, t = sp_width_tread, r = sp_radius_pPipe, sa = sp_num_steps) #踏板のベースとなるパイプ作成
-        cmds.delete('SpiralStairsTread_BaseShape.f[1:' + str(sp_num_steps - 1) + ']',
-                    'SpiralStairsTread_BaseShape.f[' + str(sp_num_steps + 1) + ':' + str(sp_num_steps * 2 - 1) + ']',
-                    'SpiralStairsTread_BaseShape.f[' + str(sp_num_steps * 2 + 1) + ':' + str(sp_num_steps * 3 - 1) + ']',
-                    'SpiralStairsTread_BaseShape.f[' + str(sp_num_steps * 3 + 1) + ':' + str(sp_num_steps * 4 - 1) + ']') #不要なフェースを削除
+        cmds.delete(f"SpiralStairsTread_BaseShape.f[1:{sp_num_steps - 1}]", f"SpiralStairsTread_BaseShape.f[{sp_num_steps + 1}:{sp_num_steps * 2 - 1}]",
+                    f"SpiralStairsTread_BaseShape.f[{sp_num_steps * 2 + 1}:{sp_num_steps * 3 - 1}]",
+                    f"SpiralStairsTread_BaseShape.f[{sp_num_steps * 3 + 1}:{sp_num_steps * 4 - 1}]") #不要なフェースを削除
         cmds.select('SpiralStairsTread_BaseShape.e[4]', 'SpiralStairsTread_BaseShape.e[6]',
                     'SpiralStairsTread_BaseShape.e[8]', 'SpiralStairsTread_BaseShape.e[10]') #穴を構成するエッジを選択、1/2
         cmds.polyCloseBorder() #穴を埋める、1/2
@@ -324,7 +323,7 @@ class StairsGenerator():
         cmds.polyCloseBorder() #穴を埋める、2/2
 
         if sp_delete_faces == True: #階段の表面以外のフェース削除
-            cmds.delete('SpiralStairsTread_BaseShape.f[0]', 'SpiralStairsTread_BaseShape.f[2:3]', 'SpiralStairsTread_BaseShape.f[5]') #底面、側面、後面のフェースを削除
+            cmds.delete('SpiralStairsTread_BaseShape.f[0]', 'SpiralStairsTread_BaseShape.f[2:3]','SpiralStairsTread_BaseShape.f[5]') #底面、側面、後面のフェースを削除
         else:
             if sp_create_pillar == True: #支柱を作成
                 cmds.delete('SpiralStairsTread_BaseShape.f[0]') #支柱と接するフェースを削除
@@ -348,8 +347,10 @@ class StairsGenerator():
         else:
             sp_location_lastObject = cmds.xform(sp_renamed_object, q = True, t = True, ws = True) #最後に複製したオブジェクトの座標を取得
             sp_num_difference = sp_height_stairs - sp_location_lastObject[1] #指定した階段の高さと実際の高さの差
+
             if sp_location_lastObject[1] < sp_height_stairs and sp_num_difference >= sp_height_step: #現在の階段の高さが指定した値に到達しておらず、かつ差の値が1段あたりの高さ以上であるか
                 sp_num_extraSteps = round(sp_num_difference / sp_height_step) #差に追加できる段数
+
                 for c in range(sp_num_extraSteps):
                     sp_duplicated_object = cmds.duplicate('SpiralStairsTread_BaseShape', n = "dup_SpiralStairsTreadBaseShape")
                     cmds.rotate(sp_now_angle, sp_duplicated_object, y = True, r = True, os = True, fo = True)
