@@ -13,7 +13,7 @@ class ObjectVisibilityController(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMain
     def toolUI(self):
         self.setGeometry(500, 300, 460, 580)
         self.setWindowTitle("Object Visibility Controller")
-        self.statusBar().showMessage("Last Updated: 2024.12.01   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2024.12.24   |   For: Maya 2024   |   Fuma Hara")
 
         label_setting01 = QtWidgets.QLabel("<b>設定01</b>")
         label_setting02 = QtWidgets.QLabel("<b>設定02</b>")
@@ -104,60 +104,51 @@ class ObjectVisibilityController(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMain
         lyt_grid_setting03.addWidget(self.checkBox_bottom03, 1, 2)
         lyt_grid_setting03.addWidget(self.checkBox_back03, 2, 0)
 
-        lyt_hBox_buttons01 = QtWidgets.QHBoxLayout() #設定01ボタン用
-        lyt_hBox_buttons01.addWidget(button_exclusion01)
-        lyt_hBox_buttons01.addWidget(button_clear01)
+        lyt_grid_buttons01 = QtWidgets.QGridLayout() #設定01ボタン用
+        lyt_grid_buttons01.addWidget(button_register01, 0, 0, 1, 2)
+        lyt_grid_buttons01.addWidget(button_exclusion01, 1, 0)
+        lyt_grid_buttons01.addWidget(button_clear01, 1, 1)
 
-        lyt_hBox_buttons02 = QtWidgets.QHBoxLayout() #設定02ボタン用
-        lyt_hBox_buttons02.addWidget(button_exclusion02)
-        lyt_hBox_buttons02.addWidget(button_clear02)
+        lyt_grid_buttons02 = QtWidgets.QGridLayout() #設定02ボタン用
+        lyt_grid_buttons02.addWidget(button_register02, 0, 0, 1, 2)
+        lyt_grid_buttons02.addWidget(button_exclusion02, 1, 0)
+        lyt_grid_buttons02.addWidget(button_clear02, 1, 1)
 
-        lyt_hBox_buttons03 = QtWidgets.QHBoxLayout() #設定03ボタン用
-        lyt_hBox_buttons03.addWidget(button_exclusion03)
-        lyt_hBox_buttons03.addWidget(button_clear03)
+        lyt_grid_buttons03 = QtWidgets.QGridLayout() #設定03ボタン用
+        lyt_grid_buttons03.addWidget(button_register03, 0, 0, 1, 2)
+        lyt_grid_buttons03.addWidget(button_exclusion03, 1, 0)
+        lyt_grid_buttons03.addWidget(button_clear03, 1, 1)
 
         lyt_vBox_setting01 = QtWidgets.QVBoxLayout() #設定01項目用
-        lyt_vBox_setting01.addWidget(button_register01)
-        lyt_vBox_setting01.addLayout(lyt_hBox_buttons01)
+        lyt_vBox_setting01.addLayout(lyt_grid_buttons01)
         lyt_vBox_setting01.addLayout(lyt_grid_setting01)
         lyt_vBox_setting01.addItem(spacer_setting01)
 
         lyt_vBox_setting02 = QtWidgets.QVBoxLayout() #設定02項目用
-        lyt_vBox_setting02.addWidget(button_register02)
-        lyt_vBox_setting02.addLayout(lyt_hBox_buttons02)
+        lyt_vBox_setting02.addLayout(lyt_grid_buttons02)
         lyt_vBox_setting02.addLayout(lyt_grid_setting02)
         lyt_vBox_setting02.addItem(spacer_setting02)
 
         lyt_vBox_setting03 = QtWidgets.QVBoxLayout() #設定03項目用
-        lyt_vBox_setting03.addWidget(button_register03)
-        lyt_vBox_setting03.addLayout(lyt_hBox_buttons03)
+        lyt_vBox_setting03.addLayout(lyt_grid_buttons03)
         lyt_vBox_setting03.addLayout(lyt_grid_setting03)
         lyt_vBox_setting03.addItem(spacer_setting03)
 
-        lyt_hBox_setting01 = QtWidgets.QHBoxLayout() #リストと横並び、設定01用
-        lyt_hBox_setting01.addWidget(self.listArea_visibility01)
-        lyt_hBox_setting01.addLayout(lyt_vBox_setting01)
-
-        lyt_hBox_setting02 = QtWidgets.QHBoxLayout() #リストと横並び、設定02用
-        lyt_hBox_setting02.addWidget(self.listArea_visibility02)
-        lyt_hBox_setting02.addLayout(lyt_vBox_setting02)
-
-        lyt_hBox_setting03 = QtWidgets.QHBoxLayout() #リストと横並び、設定03用
-        lyt_hBox_setting03.addWidget(self.listArea_visibility03)
-        lyt_hBox_setting03.addLayout(lyt_vBox_setting03)
-
-        lyt_vBox_main = QtWidgets.QVBoxLayout()
-        lyt_vBox_main.addWidget(label_setting01)
-        lyt_vBox_main.addLayout(lyt_hBox_setting01)
-        lyt_vBox_main.addWidget(label_setting02)
-        lyt_vBox_main.addLayout(lyt_hBox_setting02)
-        lyt_vBox_main.addWidget(label_setting03)
-        lyt_vBox_main.addLayout(lyt_hBox_setting03)
-        lyt_vBox_main.addWidget(button_hidden)
-        lyt_vBox_main.addWidget(button_visible)
+        lyt_grid_main = QtWidgets.QGridLayout()
+        lyt_grid_main.addWidget(label_setting01, 0, 0, 1, 2)
+        lyt_grid_main.addWidget(self.listArea_visibility01, 1, 0)
+        lyt_grid_main.addLayout(lyt_vBox_setting01, 1, 1)
+        lyt_grid_main.addWidget(label_setting02, 2, 0, 1, 2)
+        lyt_grid_main.addWidget(self.listArea_visibility02, 3, 0)
+        lyt_grid_main.addLayout(lyt_vBox_setting02, 3, 1)
+        lyt_grid_main.addWidget(label_setting03, 4, 0, 1, 2)
+        lyt_grid_main.addWidget(self.listArea_visibility03, 5, 0)
+        lyt_grid_main.addLayout(lyt_vBox_setting03, 5, 1)
+        lyt_grid_main.addWidget(button_hidden, 6, 0, 1, 2)
+        lyt_grid_main.addWidget(button_visible, 7, 0, 1, 2)
 
         lyt_widget = QtWidgets.QWidget()
-        lyt_widget.setLayout(lyt_vBox_main)
+        lyt_widget.setLayout(lyt_grid_main)
         self.setCentralWidget(lyt_widget)
 
 
