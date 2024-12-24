@@ -14,7 +14,7 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def toolUI(self):
         self.setGeometry(500, 300, 500, 550)
         self.setWindowTitle("Object Renamer")
-        self.statusBar().showMessage("Last Updated: 2024.11.10   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2024.12.24   |   For: Maya 2024   |   Fuma Hara")
 
         menu_subTool = QtWidgets.QMenu("Sub Tool") #メニューバー項目
         action_subTool = QtWidgets.QAction("Name Blocks Sort Tool", self)
@@ -88,15 +88,15 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         button_register = QtWidgets.QPushButton("登録")
         button_preview = QtWidgets.QPushButton("変更をプレビュー")
         button_exclusion = QtWidgets.QPushButton("除外")
-        button_clearNamesBefore = QtWidgets.QPushButton("クリア")
-        button_clearNamesAfter = QtWidgets.QPushButton("クリア")
+        button_clearNamesBefore = QtWidgets.QPushButton("クリア", objectName = "Clear_Before")
+        button_clearNamesAfter = QtWidgets.QPushButton("クリア", objectName = "Clear_After")
         button_rename = QtWidgets.QPushButton("リネーム")
         button_search.clicked.connect(self.search_objectNames)
         button_register.clicked.connect(self.register_objectNames)
         button_preview.clicked.connect(self.preview_objectNames)
         button_exclusion.clicked.connect(self.exclusion_namesBefore)
-        button_clearNamesBefore.clicked.connect(self.clear_namesBefore)
-        button_clearNamesAfter.clicked.connect(self.clear_namesAfter)
+        button_clearNamesBefore.clicked.connect(self.clear_namesBeforeAfter)
+        button_clearNamesAfter.clicked.connect(self.clear_namesBeforeAfter)
         button_rename.clicked.connect(self.rename_objectNames)
 
         lyt_hBox_search = QtWidgets.QHBoxLayout() #検索用レイアウト
@@ -104,7 +104,7 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         lyt_hBox_search.addWidget(self.comboBox_search)
         lyt_hBox_search.addWidget(button_search)
 
-        lyt_hBox_namesBeforeLabel = QtWidgets.QHBoxLayout()
+        lyt_hBox_namesBeforeLabel = QtWidgets.QHBoxLayout() #リネーム前ラベル用レイアウト
         lyt_hBox_namesBeforeLabel.addWidget(label_namesBefore, 1)
         lyt_hBox_namesBeforeLabel.addWidget(self.checkBox_highlight, 3)
 
@@ -125,42 +125,33 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         lyt_grid_namesBeforeAfter.addLayout(lyt_hBox_namesBeforeButton, 2, 0)
         lyt_grid_namesBeforeAfter.addLayout(lyt_hBox_namesAfterButton, 2, 1)
 
-        lyt_grid_prefixOptions = QtWidgets.QGridLayout() #プレフィックス数字設定用レイアウト
-        lyt_grid_prefixOptions.addWidget(label_prefixDigits, 0, 0)
-        lyt_grid_prefixOptions.addWidget(self.spinBox_prefixDigits, 0, 1)
-        lyt_grid_prefixOptions.addWidget(label_prefixFirst, 1, 0)
-        lyt_grid_prefixOptions.addWidget(self.spinBox_prefixFirst, 1, 1)
+        lyt_grid_prefix = QtWidgets.QGridLayout() #プレフィックス用レイアウト
+        lyt_grid_prefix.addWidget(self.comboBox_prefix, 0, 0, 1, 2) #グリッド位置＆縦横幾つグリッドを使用するか
+        lyt_grid_prefix.addWidget(self.txtLine_prefix, 1, 0, 1, 2)
+        lyt_grid_prefix.addWidget(label_prefixDigits, 2, 0)
+        lyt_grid_prefix.addWidget(self.spinBox_prefixDigits, 2, 1)
+        lyt_grid_prefix.addWidget(label_prefixFirst, 3, 0)
+        lyt_grid_prefix.addWidget(self.spinBox_prefixFirst, 3, 1)
 
-        lyt_vBox_prefix = QtWidgets.QVBoxLayout() #プレフィックス用レイアウト
-        lyt_vBox_prefix.addWidget(self.comboBox_prefix)
-        lyt_vBox_prefix.addWidget(self.txtLine_prefix)
-        lyt_vBox_prefix.addLayout(lyt_grid_prefixOptions)
+        lyt_grid_suffix = QtWidgets.QGridLayout() #サフィックス用レイアウト
+        lyt_grid_suffix.addWidget(self.comboBox_suffix, 0, 0, 1, 2)
+        lyt_grid_suffix.addWidget(self.txtLine_suffix, 1, 0, 1, 2)
+        lyt_grid_suffix.addWidget(label_suffixDigits, 2, 0)
+        lyt_grid_suffix.addWidget(self.spinBox_suffixDigits, 2, 1)
+        lyt_grid_suffix.addWidget(label_suffixFirst, 3, 0)
+        lyt_grid_suffix.addWidget(self.spinBox_suffixFirst, 3, 1)
 
-        lyt_grid_suffixOptions = QtWidgets.QGridLayout() #サフィックス数字設定用レイアウト
-        lyt_grid_suffixOptions.addWidget(label_suffixDigits, 0, 0)
-        lyt_grid_suffixOptions.addWidget(self.spinBox_suffixDigits, 0, 1)
-        lyt_grid_suffixOptions.addWidget(label_suffixFirst, 1, 0)
-        lyt_grid_suffixOptions.addWidget(self.spinBox_suffixFirst, 1, 1)
-
-        lyt_vBox_suffix = QtWidgets.QVBoxLayout() #サフィックス用レイアウト
-        lyt_vBox_suffix.addWidget(self.comboBox_suffix)
-        lyt_vBox_suffix.addWidget(self.txtLine_suffix)
-        lyt_vBox_suffix.addLayout(lyt_grid_suffixOptions)
-
-        lyt_hBox_replace = QtWidgets.QHBoxLayout()
-        lyt_hBox_replace.addWidget(self.txtLine_replaceBefore)
-        lyt_hBox_replace.addWidget(self.txtLine_replaceAfter)
-
-        lyt_vBox_mainName = QtWidgets.QVBoxLayout() #オブジェクト名用レイアウト
-        lyt_vBox_mainName.addWidget(self.comboBox_mainName)
-        lyt_vBox_mainName.addWidget(self.txtLine_mainName)
-        lyt_vBox_mainName.addLayout(lyt_hBox_replace)
-        lyt_vBox_mainName.addWidget(self.checkBox_replace)
+        lyt_grid_mainName = QtWidgets.QGridLayout() #オブジェクト名用レイアウト
+        lyt_grid_mainName.addWidget(self.comboBox_mainName, 0, 0, 1, 2)
+        lyt_grid_mainName.addWidget(self.txtLine_mainName, 1, 0, 1, 2)
+        lyt_grid_mainName.addWidget(self.txtLine_replaceBefore, 2, 0)
+        lyt_grid_mainName.addWidget(self.txtLine_replaceAfter, 2, 1)
+        lyt_grid_mainName.addWidget(self.checkBox_replace, 3, 0, 1, 2)
 
         lyt_hBox_nameSettings = QtWidgets.QHBoxLayout() #プレフィックス・オブジェクト名・サフィックス設定用レイアウト
-        lyt_hBox_nameSettings.addLayout(lyt_vBox_prefix, 1)
-        lyt_hBox_nameSettings.addLayout(lyt_vBox_mainName, 2)
-        lyt_hBox_nameSettings.addLayout(lyt_vBox_suffix, 1)
+        lyt_hBox_nameSettings.addLayout(lyt_grid_prefix, 1)
+        lyt_hBox_nameSettings.addLayout(lyt_grid_mainName, 2)
+        lyt_hBox_nameSettings.addLayout(lyt_grid_suffix, 1)
 
         lyt_form_underscore = QtWidgets.QFormLayout() #アンダーバー設定用レイアウト
         lyt_form_underscore.addRow(label_underscore, self.comboBox_underscore)
@@ -208,7 +199,7 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def register_objectNames(self):
         selected_objects = cmds.ls(sl = True)
 
-        if len(selected_objects) == 0:
+        if not selected_objects:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "何も選択されていません、登録に失敗しました。", t = "ERROR: Object Renamer")
         else:
             for one_object in selected_objects:
@@ -293,7 +284,7 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def rename_objectNames(self):
         names_renamed = [] #リネーム後オブジェクト名リスト
 
-        if len(self.names_after) == 0:
+        if not self.names_after:
             cmds.confirmDialog(b = "OK", icn = 'warning', m = "先に「変更をプレビュー」を行ってください、リネームに失敗しました。", t = "ERROR: Object Renamer")
         else:
             for one_beforeName, one_afterName in zip(self.names_before, self.names_after):
@@ -319,14 +310,15 @@ class ObjectRenamer(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
             self.listArea_namesBefore.takeItem(self.listArea_namesBefore.row(one_item)) #項目を削除
 
 
-    def clear_namesBefore(self):
-        self.names_before.clear()
-        self.listArea_namesBefore.clear()
+    def clear_namesBeforeAfter(self):
+        name_clickedButton = self.sender().objectName() #クリックしたボタン名
 
-
-    def clear_namesAfter(self):
-        self.names_after.clear()
-        self.listArea_namesAfter.clear()
+        if name_clickedButton == "Clear_Before":
+            self.names_before.clear()
+            self.listArea_namesBefore.clear()
+        else:
+            self.names_after.clear()
+            self.listArea_namesAfter.clear()
 
 
     def open_nameBlocksSortTool(self):
@@ -471,7 +463,7 @@ class NameBlocksSortTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def toolUI(self):
         self.setGeometry(500, 300, 440, 250)
         self.setWindowTitle("Name Blocks Sort Tool - Object Renamer")
-        self.statusBar().showMessage("Last Updated: 2024.10.31   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2024.12.24   |   For: Maya 2024   |   Fuma Hara")
 
         label_message = QtWidgets.QLabel("※本ツールはアンダーバーで区切られた文字列のブロックを並べ替えることができます")
 
@@ -516,10 +508,10 @@ class NameBlocksSortTool(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def register_nameBlocks(self):
         selected_object = cmds.ls(sl = True)
 
-        if len(selected_object) == 0:
+        if not selected_object:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "何も選択されていません、登録に失敗しました", t = "ERROR: Name Blocks Sort Tool")
 
-        elif len(selected_object) > 1:
+        elif len(selected_object) != 1:
             cmds.confirmDialog(b = "OK", icn = 'critical', m = "複数登録することはできません、登録に失敗しました", t = "ERROR: Name Blocks Sort Tool")
         else:
             self.initialize_settings()
