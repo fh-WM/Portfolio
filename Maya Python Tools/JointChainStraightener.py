@@ -14,7 +14,7 @@ class JointChainStraightener(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWind
     def toolUI(self):
         self.setGeometry(500, 300, 400, 350)
         self.setWindowTitle("JointChain Straightener")
-        self.statusBar().showMessage("Last Updated: 2024.12.28   |   For: Maya 2024   |   Fuma Hara")
+        self.statusBar().showMessage("Last Updated: 2025.1.20   |   For: Maya 2024   |   Fuma Hara")
 
         label_JointsToBeStraight = QtWidgets.QLabel("矯正するジョイント", alignment = QtCore.Qt.AlignBottom)
         label_axisSelect = QtWidgets.QLabel("矯正する軸")
@@ -163,6 +163,8 @@ class JointChainStraightener(mayaMixin.MayaQWidgetBaseMixin, QtWidgets.QMainWind
 
                     if axisZ == True:
                         cmds.move(position_newZ, one_joint, z = True, ws = True)
+
+                    cmds.joint(e = True, ch = True, oj = 'xyz', sao = 'yup', zso = True) #ジョイントの方向付け、X軸を子ジョイントに向ける
 
 
     def return_jointsPosition(self):
